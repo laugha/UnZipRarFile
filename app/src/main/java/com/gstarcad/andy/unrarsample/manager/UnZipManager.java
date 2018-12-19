@@ -113,7 +113,8 @@ public class UnZipManager {
                 fileModel = new FileModel();
                 if (!fileHeader.getFileName().startsWith(".")) {
                     int fileDate = fileHeader.getLastModFileTime();
-                    Date date = getDateDos(fileDate);
+                    Date date = new Date(Zip4jUtil.dosToJavaTme(fileDate));
+                    // Date date = getDateDos(fileDate);
                     String formatDate = DateUtils.getDateToString(date);
                     long fileSize = fileHeader.getUncompressedSize();
                     String formatSize = FileUtils.formatFileSize(fileSize);
