@@ -112,8 +112,8 @@ public class UnZipManager {
             for (FileHeader fileHeader : list) {
                 fileModel = new FileModel();
                 if (!fileHeader.getFileName().startsWith(".")) {
-                    long fileDate = fileHeader.getLastModFileTime();
-                    Date date = new Date(fileDate);
+                    int fileDate = fileHeader.getLastModFileTime();
+                    Date date = getDateDos(fileDate);
                     String formatDate = DateUtils.getDateToString(date);
                     long fileSize = fileHeader.getUncompressedSize();
                     String formatSize = FileUtils.formatFileSize(fileSize);
@@ -147,6 +147,23 @@ public class UnZipManager {
             e.printStackTrace();
         }
         return listFiles;
+    }
+    
+    /**
+     * 处理时间格式
+     *
+     * @param time
+     * @return
+     */
+    private Date getDateDos(int time) {
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.YEAR, (time >>> 25) + 1980);
+        cal.set(Calendar.MONTH, ((time >>> 21) & 0x0f) - 1);
+        cal.set(Calendar.DAY_OF_MONTH, (time >>> 16) & 0x1f);
+        cal.set(Calendar.HOUR_OF_DAY, (time >>> 11) & 0x1f);
+        cal.set(Calendar.MINUTE, (time >>> 5) & 0x3f);
+        cal.set(Calendar.SECOND, (time & 0x1f) * 2);
+        return cal.getTime();
     }
 
     /**
